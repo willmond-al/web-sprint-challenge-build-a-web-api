@@ -50,15 +50,31 @@ router.get('/:id/actions', mw.validateProjectId, (req, res) => {
     })
 })
 
-router.post('/:id/actions', mw.validateProjectId, mw.checkAction, (req, res) => {
-    const actionInfo = {...req.body, project_id: req.params.id}
-    Actions.insert(actionInfo)
-    .then(action => {
-        res.status(201).json(action)
+router.put('/:id', mw.validateProjectId, mw.checkProject, (req, res) => {
+    Projects.update(req.params.id, req.body)
+    .then(project => {
+        res.status(200).json(project)
     })
     .catch(err => {
         console.log(err)
-        res.status(500).json('trouble adding action')
+        res.status(500).json({
+            message: 'could not update project'
+        })
+    })
+})
+
+router.delete('/:id', mw.validateProjectId, (req, res) => {
+    Projects.remove(req.params.id)
+    .then(resp => {
+        res.status(200).json({
+            message: `project id: ${req.params.id} is gone`
+        })
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).json({
+            message: 'could not delete project'
+        })
     })
 })
 
