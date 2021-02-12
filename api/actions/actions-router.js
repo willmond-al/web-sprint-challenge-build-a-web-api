@@ -24,15 +24,18 @@ router.get('/:id', mw.validateActionId, (req, res) => {
     res.status(200).json(req.action)
 })
 
-router.post('/', mw.validateProjectId, mw.checkAction, (req, res) => {
+router.post('/', /*mw.validateProjectId,*/ mw.checkAction, (req, res) => {
     // const actionInfo = {...req.body, project_id: req.params.id}
+    console.log(req.body)
     Actions.insert(req.body)
     .then(action => {
         res.status(201).json(action)
     })
     .catch(err => {
         console.log(err)
-        res.status(400).json('trouble adding action')
+        res.status(500).json({
+            message:'trouble adding action'
+        })
     })
 })
 

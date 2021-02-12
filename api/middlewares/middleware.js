@@ -45,7 +45,11 @@ function checkAction(req, res, next){
         res.status(400).json('description required')
     } else if(req.body.description.length > 128){
         res.status(400).json('description longer than 128 characters!')
-    } else {
+    } else if(!req.body.project_id) {
+        res.status(400).json('specify project_id!')
+    } else if(!req.body.notes) {
+        res.status(400).json('notes required')
+    }else {
         next()
     }
 }
