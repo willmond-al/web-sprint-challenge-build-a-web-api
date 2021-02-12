@@ -20,7 +20,7 @@ const validateActionId = async (req, res, next) => {
     try{
         const action = await Actions.get(id)
         if(!action){
-            res.status(404).json({message: `no action with id: ${id}`})
+            res.status(404).json({message: `no post with id: ${id}`})
         } else {
             req.action = action
             next()
@@ -30,7 +30,29 @@ const validateActionId = async (req, res, next) => {
     }
 }
 
+function checkProject(req, res, next){
+    if(!req.body.name){
+        res.status(400).json('name required')
+    } else if (!req.body.description) {
+        res.status(400).json('description required')
+    } else {
+        next()
+    }
+} 
+
+function checkAction(req, res, next){
+    if(!req.body.description){
+        res.status(400).json('description required')
+    } else if(req.body.description.length > 128){
+        res.status(400).json('description longer than 128 characters!')
+    } else {
+        next()
+    }
+}
+
 module.exports = {
     validateProjectId,
-    validateActionId
+    validateActionId, 
+    checkProject,
+    checkAction
 }
